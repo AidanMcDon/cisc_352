@@ -93,34 +93,24 @@ def prop_FC(csp, newVar=None):
        track of all pruned variable,value pairs and return '''
     #IMPLEMENT
     if not newVar:
-        to_prune_list = []
-        remaining_options = False
-        all_constraints_with_one_var = []
+        return True, []
 
-        for con in csp.get_all_cons():
-            if len(con.get_unasgn_vars()) == 1:
-                all_constraints_with_one_var.append(con)
+    prune_list = []
 
-        #print(len(all_constraints_with_one_var))
-
-        if len(all_constraints_with_one_var) == 0:
-            return True, []
-        for c in all_constraints_with_one_var:
-            for v in c.get_scope():
-                for constraint_with_v in csp.get_cons_with_var(v):
-                    for v_option in v.cur_domain():
-                        if not constraint_with_v.check_var_val(v, v_option):
-                            to_prune_list.append((v,v_option))
-                            #print("constraint: ", constraint_with_v, "violated by tuple: ", v,v_option)
-                        else:
-                            remaining_options = True
-        return remaining_options, to_prune_list
-
-            
     for constraint_with_newvar in (csp.get_cons_with_var(newVar)):
-        if not constraint_with_newvar.check_var_val(newVar,newVar.get_assigned_value()):
-            return False, []
-    return prop_FC(csp)
+        '''constraints that have both the new variable and 1 variable left unassigned'''
+        if constraint_with_newvar.get_n_unasgn() == 1: 
+            valid_var_choices = 0
+            other_var = constraint_with_newvar.get_unasgn_vars()[0]
+            for var_option in other_var.cur_domain():
+                if not constraint_with_newvar.check_var_val(other_var, var_option):
+                    prune_list.append((other_var,var_option))
+                else:
+                    valid_var_choices += 1
+            if valid_var_choices <= 0:
+                return False, []
+    return True, prune_list
+
 
 
     pass
