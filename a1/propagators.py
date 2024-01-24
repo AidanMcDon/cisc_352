@@ -94,19 +94,23 @@ def prop_FC(csp, newVar=None):
     #IMPLEMENT
     if not newVar:
         to_prune_list = []
-        for c in csp.get_all_nary_cons(1):
-            validity, to_be_pruned = prop_FC(c.get_scope[0])
-            if not validity:
-                to_prune_list.append(to_be_pruned[0])
-        return True, to_prune_list
+        remaining_options = False
+        all_constraints_with_one_var = csp.get_all_nary_cons(1)
+        if len(all_constraints_with_one_var) == 0:
+            return True, []
+        for c in all_constraints_with_one_var:
+            for v in c.get_scope():
+                for constraint_with_v in v.get_cons_with_var():
+                    for v_option in v.cur_domain():
+                        if not constraint_with_v.check_var_val(v, v_option):
+                            to_prune_list.append((v,v_option))
+                            print("constraint: ", constraint_with_v, "violated by tuple: ", v,v_option)
+                        else:
+                            remaining_options = True
+        return remaining_options, to_prune_list
 
             
         
-    for c in csp.get_cons_with_var(newVar):
-        to_prune_list = []
-        if not c.check_var_val(newVar, newVar.get_assigned_value()):
-            print("constraint: ", c.get_scope(), "violated by tuple: ", newVar,newVar.get_assigned_value())
-            return False, [(newVar, newVar.get_assigned_value())]
     return prop_FC(csp)
 
 
