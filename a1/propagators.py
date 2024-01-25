@@ -8,6 +8,7 @@
 # desc:
 #
 
+from collections import deque
 
 #Look for #IMPLEMENT tags in this file. These tags indicate what has
 #to be implemented to complete problem solution.
@@ -120,5 +121,33 @@ def prop_GAC(csp, newVar=None):
     '''Do GAC propagation. If newVar is None we do initial GAC enforce
        processing all constraints. Otherwise we do GAC enforce with
        constraints containing newVar on GAC Queue'''
-    #IMPLEMENT
+    to_prune_list = []
+
+    constraint_queue = deque()
+    if not newVar:
+        for constraint in csp.get_all_cons():
+            constraint_queue.append(constraint)
+    else:
+        for constraint in csp.get_cons_with_var(newVar):
+            constraint_queue.append(constraint)
+
+    
+    while len(constraint_queue) > 0:
+        #print(len(constraint_queue))
+        current_constraint = constraint_queue.pop()
+        for variable in current_constraint.get_unasgn_vars():
+            for value in variable.cur_domain():
+                for local_contraint in csp.get_cons_with_var(variable):
+                    if not local_contraint.check_var_val(variable, value):
+                        to_prune_list.append((variable,value))
+                        for constraint_to_be_checked in csp.get_cons_with_var(variable):
+                            if not (constraint_to_be_checked == current_constraint):
+                                variable.prune_value(value)
+                                constraint_queue.append(constraint_to_be_checked)
+
+    return True, to_prune_list
+
+    
+
+    
     pass
