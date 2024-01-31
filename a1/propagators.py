@@ -122,10 +122,10 @@ def prop_GAC(csp, newVar=None):
     arc_queue = deque()
 
     '''Run Forward Checking First'''
-    #fc, pruned_list = prop_FC(csp, newVar)
-    #if not fc:
-    #    return False, pruned_list
-    pruned_list = []
+    fc, pruned_list = prop_FC(csp, newVar)
+    if not fc:
+        return False, pruned_list
+    #pruned_list = []
 
     '''if no new varible assigned, check all constraints in the csp
     if new varible is assigned check all contraints with the new variable'''
@@ -150,10 +150,9 @@ def prop_GAC(csp, newVar=None):
                 if variable.cur_domain_size() == 0:
                     return False, pruned_list
             if domain_changed:
-                for variable_in_con in current_dequeue.get_unasgn_vars():
-                    for constraint_under_dequeue_var in csp.get_cons_with_var(variable_in_con):
-                        if not constraint_under_dequeue_var in arc_queue and not constraint_under_dequeue_var == current_dequeue:
-                            arc_queue.append(constraint_under_dequeue_var)
+                for constraint_under_dequeue_var in csp.get_cons_with_var(variable):
+                    if not constraint_under_dequeue_var in arc_queue and not constraint_under_dequeue_var == current_dequeue:
+                        arc_queue.append(constraint_under_dequeue_var)
     return True, pruned_list
 
 
