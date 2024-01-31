@@ -95,22 +95,20 @@ def prop_FC(csp, newVar=None):
     #IMPLEMENT
     if not newVar:
         return True, []
-
+    
     prune_list = []
-
-    for constraint_with_newvar in (csp.get_cons_with_var(newVar)):
-        '''constraints that have both the new variable and 1 variable left unassigned'''
-        if constraint_with_newvar.get_n_unasgn() == 1: 
-            valid_var_choices = 0
-            other_var = constraint_with_newvar.get_unasgn_vars()[0]
-            for var_option in other_var.cur_domain():
-                if not constraint_with_newvar.check_var_val(other_var, var_option):
-                    prune_list.append((other_var,var_option))
-                else:
-                    valid_var_choices += 1
-            if valid_var_choices <= 0:
+    
+    for constraint_with_newvar in csp.get_cons_with_var(newVar):
+        for unassigned_variable in constraint_with_newvar.get_unasgn_vars():
+            for domain_element in unassigned_variable.cur_domain():
+                if not constraint_with_newvar.check_var_val(unassigned_variable, domain_element):
+                    unassigned_variable.prune_value(domain_element)
+                    prune_list.append((unassigned_variable, domain_element))
+            if unassigned_variable.cur_domain_size() == 0:
                 return False, prune_list
-    return prop_BT(csp, newVar)[0], prune_list
+            
+    return True, prune_list
+
 
 
 

@@ -214,6 +214,7 @@ def solve_graph_color(propType, trace=False):
 # ===============
 # Execution block
 # ===============
+print("=========================================")
 trace = False
 print("Plain Backtracking on Colouring Australia")
 solve_graph_color('BT', trace)
@@ -281,10 +282,10 @@ def solve_nQueens(n, propType, trace=False):
 trace = False
 #trace = False
 print("Plain Bactracking on 8-queens")
-solve_nQueens(8, 'BT', trace)
+solve_nQueens(16, 'BT', trace)
 print("=======================================================")
 print("Forward Checking 8-queens")
-solve_nQueens(8, 'FC', trace)
+solve_nQueens(16, 'FC', trace)
 print("=======================================================")
 print("GAC 8-queens")
 solve_nQueens(8, 'GAC', trace)
