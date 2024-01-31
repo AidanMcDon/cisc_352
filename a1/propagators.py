@@ -109,8 +109,8 @@ def prop_FC(csp, newVar=None):
                 else:
                     valid_var_choices += 1
             if valid_var_choices <= 0:
-                return False, []
-    return True, prune_list
+                return False, prune_list
+    return prop_BT(csp, newVar)[0], prune_list
 
 
 
