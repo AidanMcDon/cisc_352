@@ -86,7 +86,38 @@ An example of a 3x3 puzzle would be defined as:
 from cspbase import *
 
 def binary_ne_grid(cagey_grid):
-    ##IMPLEMENT
+    n = cagey_grid[0]
+
+    vars = []
+    cons = []
+
+
+    '''Domain from 1 to n for all variables
+    scope from 1 to n with none matching'''
+    dom = []
+    sat_tuple = []
+    for i in range(n):
+        dom.append(i)
+        for j in range(n):
+            if i != j:
+                sat_tuple.append((i,j))
+
+
+    
+
+    
+
+    for i in range(n * n):
+        vars.append(Variable(str(i),dom))
+
+    for i in range(n*n):
+        for j in range(i % n):
+            cons.append(Constraint())
+
+
+    
+
+
     pass
 
 
