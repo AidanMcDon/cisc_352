@@ -119,33 +119,45 @@ def prop_GAC(csp, newVar=None):
     '''Do GAC propagation. If newVar is None we do initial GAC enforce
        processing all constraints. Otherwise we do GAC enforce with
        constraints containing newVar on GAC Queue'''
-    to_prune_list = []
+    arc_queue = deque()
 
-    constraint_queue = deque()
+    '''Run Forward Checking First'''
+    #fc, pruned_list = prop_FC(csp, newVar)
+    #if not fc:
+    #    return False, pruned_list
+    pruned_list = []
+
+    '''if no new varible assigned, check all constraints in the csp
+    if new varible is assigned check all contraints with the new variable'''
     if not newVar:
         for constraint in csp.get_all_cons():
-            constraint_queue.append(constraint)
+            arc_queue.append(constraint)
     else:
-        for constraint in csp.get_cons_with_var(newVar):
-            constraint_queue.append(constraint)
-
-    
-    while len(constraint_queue) > 0:
-        #print(len(constraint_queue))
-        current_constraint = constraint_queue.pop()
-        for variable in current_constraint.get_unasgn_vars():
-            for value in variable.cur_domain():
-                for local_contraint in csp.get_cons_with_var(variable):
-                    if not local_contraint.check_var_val(variable, value):
-                        to_prune_list.append((variable,value))
-                        for constraint_to_be_checked in csp.get_cons_with_var(variable):
-                            if not (constraint_to_be_checked == current_constraint):
-                                variable.prune_value(value)
-                                constraint_queue.append(constraint_to_be_checked)
-
-    return True, to_prune_list
-
-    
-
-    
+        for constraint_with_newvar in csp.get_cons_with_var(newVar):
+            arc_queue.append(constraint_with_newvar)
     pass
+
+    while len(arc_queue) > 0:
+        domain_changed = False
+        current_dequeue = arc_queue.popleft()
+        for variable in current_dequeue.get_unasgn_vars():
+            for domain_option in variable.cur_domain():
+            #'''check if each elemnt of the domain can satisfy the contraint'''
+                if not current_dequeue.check_var_val(variable, domain_option):
+                    domain_changed = True
+                    pruned_list.append((variable,domain_option))
+                    variable.prune_value(domain_option)
+                if variable.cur_domain_size() == 0:
+                    return False, pruned_list
+            if domain_changed:
+                for variable_in_con in current_dequeue.get_unasgn_vars():
+                    for constraint_under_dequeue_var in csp.get_cons_with_var(variable_in_con):
+                        if not constraint_under_dequeue_var in arc_queue and not constraint_under_dequeue_var == current_dequeue:
+                            arc_queue.append(constraint_under_dequeue_var)
+    return True, pruned_list
+
+
+
+
+
+

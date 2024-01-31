@@ -288,5 +288,5 @@ print("Forward Checking 8-queens")
 solve_nQueens(16, 'FC', trace)
 print("=======================================================")
 print("GAC 8-queens")
-solve_nQueens(8, 'GAC', trace)
+solve_nQueens(16, 'GAC', trace)
 
