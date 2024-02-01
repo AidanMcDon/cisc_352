@@ -93,14 +93,15 @@ def binary_ne_grid(cagey_grid):
 
 
     '''Domain from 1 to n for all variables
-    scope from 1 to n with none matching'''
+    satisfying tuples from 1 to n with none matching'''
     dom = []
     sat_tuple = []
     for i in range(n):
         dom.append(i)
         for j in range(n):
             if i != j:
-                sat_tuple.append((i,j))
+                sat_tuple.append((i + 1,j + 1))
+                sat_tuple.append((j + 1,i + 1))
 
 
     
@@ -112,7 +113,20 @@ def binary_ne_grid(cagey_grid):
 
     for i in range(n*n):
         for j in range(i % n):
-            cons.append(Constraint())
+            new_con = Constraint("R" + str(i) + str(j), [vars[i], vars[i-j-1]])
+            new_con.add_satisfying_tuples(sat_tuple)
+            cons.append(new_con)
+        for j in range(i // n):
+            new_con = Constraint("C" + str(i) + str(j), [vars[i], vars[i-j*n-1]])
+            new_con.add_satisfying_tuples(sat_tuple)
+            cons.append(new_con)
+
+    csp = CSP("binary",vars)
+    for con in cons:
+        csp.add_constraint(con)
+
+    return [csp, vars]
+
 
 
     

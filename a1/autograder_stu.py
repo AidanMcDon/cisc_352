@@ -373,14 +373,15 @@ class TestBinaryGrid(unittest.TestCase):
         bidirectional_ans = unidirectional_ans * 2
         if len(constraints_binary) == unidirectional_ans or len(constraints_binary) == bidirectional_ans:
             passed = True
+
             sats = [c.sat_tuples for c in constraints_binary]
+            print(sats)
             for a in answer_binary:
                 if a.sat_tuples not in sats:
                     passed = False
                     message += "Failed to encode: %s\n" % a.sat_tuples
         else:
             message += "Encoded incorrect number of constraints for board: %s\n" % str(b)
-
         end_time = time.time()
         time_spent = end_time-start_time
         
@@ -390,6 +391,8 @@ class TestBinaryGrid(unittest.TestCase):
         if (time_spent>TIME_ALLOWED):
             passed = False
             message += "Over time!\n"
+
+        print(passed)
 
         self.assertTrue(passed, message)
         if passed:
