@@ -170,9 +170,11 @@ class TestNaryGrid(unittest.TestCase):
 
         answer_nary = test_nary_grid_1_answer_nary()
 
+
         if len(constraints_nary) == b[0] * 2:
             passed = True
             sats = [c.sat_tuples for c in constraints_nary]
+            print(sats)
             for a in answer_nary:
                 if a.sat_tuples not in sats:
                     passed = False
@@ -375,7 +377,6 @@ class TestBinaryGrid(unittest.TestCase):
             passed = True
 
             sats = [c.sat_tuples for c in constraints_binary]
-            print(sats)
             for a in answer_binary:
                 if a.sat_tuples not in sats:
                     passed = False
@@ -392,7 +393,6 @@ class TestBinaryGrid(unittest.TestCase):
             passed = False
             message += "Over time!\n"
 
-        print(passed)
 
         self.assertTrue(passed, message)
         if passed:

@@ -136,9 +136,64 @@ def binary_ne_grid(cagey_grid):
 
 
 def nary_ad_grid(cagey_grid):
-    ## IMPLEMENT
+    n = cagey_grid[0]
+
+    vars = []
+    cons = []
+
+
+    '''Domain from 1 to n for all variables
+    satisfying tuples from 1 to n with none matching'''
+    dom = []
+    sat_tuple = []
+    for i in range(n):
+        dom.append(i)
+        new_sat_tuple = []
+        for j in range(n):
+            new_sat_tuple.append((i + j) % n)
+        sat_tuple.append(new_sat_tuple)
+
+
+    
+
+
+    
+
+    
+
+    for i in range(n * n):
+        vars.append(Variable(str(i),dom))
+
+    for i in range(n):
+        new_con_row = []
+        new_con_col = []
+        for j in range(n):
+            new_con_row.append(vars[i * n + j ])
+            new_con_col.append(vars[j * n + i ])
+        new_con_row = Constraint("R" + str(i), tuple(new_con_row))
+        new_con_col = Constraint("C" + str(i), tuple(new_con_col))
+        new_con_row.add_satisfying_tuples(sat_tuple)
+        new_con_col.add_satisfying_tuples(sat_tuple)
+        cons.append(new_con_col)
+        cons.append(new_con_row)
+
+    csp = CSP("nary", vars)
+    for con in cons:
+        csp.add_constraint(con)
+
+    return [csp, vars]
     pass
 
 def cagey_csp_model(cagey_grid):
     ##IMPLEMENT
     pass
+
+
+if __name__ == '__main__':
+    b = (3, [(2, [(1, 1), (1, 2)], '-'), (2, [(1, 3)], '?'), (2, [(2, 1), (3, 1)], '/'), (3, [(2, 2), (2, 3)], '/'),
+                 (1, [(3, 2), (3, 3)], '-')])
+
+
+
+    csp_nary = nary_ad_grid(b)[0]
+    constraints_nary = csp_nary.get_all_cons()
