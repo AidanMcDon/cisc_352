@@ -134,8 +134,49 @@ def binary_ne_grid(cagey_grid):
 
     pass
 
+def copy_list(list):
+    new_list = []
+    for elem in list:
+        new_list.append(elem)
+    return new_list
+
+def create_n_sat_tuples(n, list = []):
+
+    if len(list) == 0:
+        for i in range(n):
+            list.append([i + 1])
+        print("n Value: " + str(n) + " Original List: " + str(list))
+    
+    new_list = []
+    changed_list = False
+    for list_tuple in list:
+        if len(list_tuple) < n:
+            changed_list = True
+            for i in range(n):
+                list_item = copy_list(list_tuple)
+                list_item.append(i + 1)
+                new_list.append(list_item)
+
+    if changed_list:
+        return create_n_sat_tuples(n, new_list)
+    else:
+        to_be_removed = []
+        for i in range(n):
+            for elem in list:
+                if elem.count(i + 1) > 1:
+                    to_be_removed.append(elem)
+        for elem in to_be_removed:
+            try:
+                list.remove(elem)
+            except Exception as e:
+                pass
+        return list
+        
+            
+            
 
 def nary_ad_grid(cagey_grid):
+
     n = cagey_grid[0]
 
     vars = []
@@ -148,10 +189,10 @@ def nary_ad_grid(cagey_grid):
     sat_tuple = []
     for i in range(n):
         dom.append(i)
-        new_sat_tuple = []
-        for j in range(n):
-            new_sat_tuple.append((i + j) % n)
-        sat_tuple.append(new_sat_tuple)
+    sat_tuple_lists = create_n_sat_tuples(n, [])
+    print("n value: " + str(n) + " Tuples:\n" + str(sat_tuple_lists))
+    for item in sat_tuple_lists:
+        sat_tuple.append(tuple(item))
 
 
     

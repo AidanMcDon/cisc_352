@@ -174,7 +174,7 @@ class TestNaryGrid(unittest.TestCase):
         if len(constraints_nary) == b[0] * 2:
             passed = True
             sats = [c.sat_tuples for c in constraints_nary]
-            print(sats)
+            #print(sats)
             for a in answer_nary:
                 if a.sat_tuples not in sats:
                     passed = False
