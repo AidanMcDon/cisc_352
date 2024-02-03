@@ -32,7 +32,7 @@ def ord_dh(csp):
     best = 0
     best_var = None
     for var in csp.get_all_vars():
-        size = csp.get_cons_with_var(var).size
+        size = len(csp.get_cons_with_var(var))
         if size > best:
             best = size
             best_var = var
