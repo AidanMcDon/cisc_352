@@ -145,7 +145,7 @@ def create_n_sat_tuples(n, list = []):
     if len(list) == 0:
         for i in range(n):
             list.append([i + 1])
-        print("n Value: " + str(n) + " Original List: " + str(list))
+
     
     new_list = []
     changed_list = False
@@ -190,7 +190,6 @@ def nary_ad_grid(cagey_grid):
     for i in range(n):
         dom.append(i)
     sat_tuple_lists = create_n_sat_tuples(n, [])
-    print("n value: " + str(n) + " Tuples:\n" + str(sat_tuple_lists))
     for item in sat_tuple_lists:
         sat_tuple.append(tuple(item))
 
