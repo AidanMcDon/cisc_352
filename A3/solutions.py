@@ -45,11 +45,9 @@ def normalize(self):
     print("Total: " + str(total))
     if(total == 0):
         return
-    for key in self.keys():
+    for key in self.keys():##for each key divide its value by total to normalize dictionary
         value = self[key]
-        print("Value Before: " + str(value))
         value = value/total
-        print("Value After: " + str(value))
         self[key] = value
     
 
