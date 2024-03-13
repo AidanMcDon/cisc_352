@@ -75,6 +75,15 @@ def sample(self):
     """
     "*** YOUR CODE HERE ***"
     raiseNotDefined()
+    random_float = random.random()
+    count = 0
+    normal_set = self.copy().normalize()
+    for key in self.keys():##for each key check if count > random_float, if not add the keys value
+        count += self[key]
+        if count > random_float:
+            return key
+
+
 
 
 def getObservationProb(self, noisyDistance, pacmanPosition, ghostPosition, jailPosition):
